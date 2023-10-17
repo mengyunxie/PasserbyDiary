@@ -1,0 +1,31 @@
+/*
+ * Author: Mengyun Xie
+ * Date: 04/17/2023
+ * This code is a part of the final project of the INFO 6250 course
+ */
+
+const uuid = require('uuid').v4;
+
+const sessions = {};
+
+function addSession(username) {
+  const sid = uuid();
+  sessions[sid] = {
+    username,
+  };
+  return sid;
+}
+
+function getSessionUser(sid) {
+  return sessions[sid]?.username;
+}
+
+function deleteSession(sid) {
+  delete sessions[sid];
+}
+
+module.exports = {
+  addSession,
+  deleteSession,
+  getSessionUser,
+};
