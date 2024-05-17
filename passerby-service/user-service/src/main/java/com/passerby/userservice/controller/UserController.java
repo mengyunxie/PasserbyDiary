@@ -1,63 +1,83 @@
 package com.passerby.userservice.controller;
 
+import com.passerby.userservice.dto.LoginRequest;
+import com.passerby.userservice.dto.UpdateAvatarRequest;
+import com.passerby.userservice.dto.Result;
 import com.passerby.userservice.dto.UserDTO;
 import com.passerby.userservice.model.User;
-import com.passerby.userservice.repository.UserRepository;
+import com.passerby.userservice.service.SessionService;
 import com.passerby.userservice.service.UserService;
-import lombok.RequiredArgsConstructor;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/users")
-@RequiredArgsConstructor
+@RequestMapping("/api/v1/session")
 @Slf4j
 public class UserController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody UserDTO userDTO) {
-        User user = User.builder()
-                .password(userDTO.getPassword())
-                .email(userDTO.getEmail())
-                .build();
+    @Autowired
+    private SessionService sessionService;
 
-        return ResponseEntity.ok(userService.registerUser(user));
+
+    @GetMapping("/test")
+    public void test() {
+        System.out.println("test");
+    }
+    @PostMapping()
+    public ResponseEntity<User> loginUser(@RequestBody LoginRequest request, HttpServletResponse response) {
+        Result result = userService.loginUser(request,response);
+        if(result.getCode() == 0) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Optional<User> user = (Optional<User>) result.getData();
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // or another appropriate status
+        }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        log.info("- - - Get user info for id: {} - - -", id);
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping()
+    public ResponseEntity<?> checkSession(@CookieValue(value = "sid", defaultValue = "") String sid) {
+        String username = sessionService.getSessionUser(sid);
+        if (username == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "auth-missing"));
+        }
+        UserDTO user = userService.getUser(username);
+        return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        log.info("- - - Get user info for email: {} - - -", email);
-        return userService.getUserByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @PatchMapping()
+    public ResponseEntity<?> updateUserAvatar(@RequestBody UpdateAvatarRequest request, @CookieValue(value = "sid", defaultValue = "") String sid) {
+        String username = sessionService.getSessionUser(sid);
+        if (username == null || !userService.isValidUsername(username)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "auth-missing"));
+        }
+        UserDTO userDTO = userService.updateUserAvatar(username, request.getAvatar());
+        return ResponseEntity.ok(userDTO);
     }
 
-
-//    @PostMapping("/{id}/avatar")
-//    public ResponseEntity<User> uploadAvatar(@PathVariable Long id, @RequestParam("avatar") MultipartFile avatarFile) {
-//        try {
-//            return ResponseEntity.ok(userService.uploadAvatar(id, avatarFile));
-//        } catch (IOException e) {
-//            return ResponseEntity.status(500).build();
-//        }
-//    }
-
-    @PostMapping("/{id}/password")
-    public ResponseEntity<User> changePassword(@PathVariable Long id, @RequestParam("password") String newPassword) {
-        return ResponseEntity.ok(userService.changePassword(id, newPassword));
+    @DeleteMapping()
+    public ResponseEntity<?> logoutUser(@CookieValue(value = "sid", defaultValue = "") String sid, HttpServletResponse response) {
+        String username = sessionService.getSessionUser(sid);
+        if (username != null) {
+            sessionService.deleteSession(sid);
+        }
+        ResponseCookie cookie = ResponseCookie.from("sid", "").path("/").maxAge(0).build();
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return ResponseEntity.ok(Map.of("wasLoggedIn", username != null));
     }
 }

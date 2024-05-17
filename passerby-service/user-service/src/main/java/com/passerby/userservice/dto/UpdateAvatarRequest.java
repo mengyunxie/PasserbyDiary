@@ -1,4 +1,4 @@
-package com.passerby.authservice.dto;
+package com.passerby.userservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,10 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class LoginRequest {
-    private String email;
-    private String password;
+public class UpdateAvatarRequest {
+    private String avatar;
 }

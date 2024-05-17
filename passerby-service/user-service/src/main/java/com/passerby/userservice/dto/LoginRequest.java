@@ -1,4 +1,4 @@
-package com.passerby.apigateway.dto;
+package com.passerby.userservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
-    private String password;
-    private String email;
+public class LoginRequest {
+    private String username;
 }

@@ -1,32 +1,35 @@
 package com.passerby.authservice.service;
 
 import com.passerby.authservice.client.UserServiceClient;
-import com.passerby.authservice.dto.UserDTO;
+import com.passerby.authservice.dto.User;
+import com.passerby.authservice.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
-    @Autowired
-    private UserServiceClient userServiceClient;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserServiceClient userServiceClient;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    private JwtService jwtService;
-
-    public String registerUser(UserDTO userDTO) {
-        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        userServiceClient.registerUser(userDTO);
-        return "user added to the system";
+    public AuthService(UserServiceClient userServiceClient, JwtUtil jwtUtil) {
+        this.userServiceClient = userServiceClient;
+        this.jwtUtil = jwtUtil;
     }
 
-    public String generateToken(UserDTO userDTO) {
-        return jwtService.generateToken(userDTO);
+    public String login(String username) {
+        User user = userServiceClient.getUserByUsername(username);
+        if (user == null) {
+            user = userServiceClient.createUser(new User(username));
+        }
+        return jwtUtil.generateToken(user);
     }
 
-    public void isTokenValid(String token, UserDTO userDTO) {
-        jwtService.isTokenValid(token, userDTO);
+    public String refreshToken(String token) {
+        return jwtUtil.refreshToken(token);
+    }
+
+    public boolean validateToken(String token) {
+        return jwtUtil.validateToken(token);
     }
 }
