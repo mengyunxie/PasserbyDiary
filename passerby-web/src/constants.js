@@ -4,6 +4,10 @@
  * This code is a part of the final project of the INFO 6250 course
  */
 
+// Base url
+
+export const baseUrl = 'http://localhost:8080';
+
 // The system's build-in side menus
 export const SIDE_MENU = {
   PASSERBY: 'Passerby',

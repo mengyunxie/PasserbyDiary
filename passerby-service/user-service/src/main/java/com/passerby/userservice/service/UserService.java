@@ -43,7 +43,9 @@ public class UserService {
         if(user == null) { // New user, create default labels and avatars for this user
             user = UserDTO.builder()
                     .username(username)
-                    .avatar_key("Default")
+                    .avatar("Default")
+                    .avatars(avatarService.getAllAvatars())
+                    .labels(labelService.getAllLabels())
                     .build();
             createUser(user);
         }
@@ -56,7 +58,7 @@ public class UserService {
     public void createUser(UserDTO userDTO) {
         User user = User.builder()
                         .username(userDTO.getUsername())
-                        .avatar_key(userDTO.getAvatar_key())
+                        .avatar(userDTO.getAvatar())
                         .build();
 
         userRepository.save(user);
@@ -64,11 +66,13 @@ public class UserService {
 
     public UserDTO updateUserAvatar(String username, String avatar) {
         User user = userRepository.findByUsername(username);
-        user.setAvatar_key(avatar);
+        user.setAvatar(avatar);
         userRepository.save(user);
         return UserDTO.builder()
                 .username(user.getUsername())
-                .avatar_key(user.getAvatar_key())
+                .avatar(user.getAvatar())
+                .avatars(avatarService.getAllAvatars())
+                .labels(labelService.getAllLabels())
                 .build();
     }
 
@@ -81,7 +85,9 @@ public class UserService {
     private UserDTO mapToUserDTO(User user) {
         return UserDTO.builder()
                 .username(user.getUsername())
-                .avatar_key(user.getAvatar_key())
+                .avatar(user.getAvatar())
+                .avatars(avatarService.getAllAvatars())
+                .labels(labelService.getAllLabels())
                 .build();
     }
 
@@ -89,7 +95,9 @@ public class UserService {
         User user = userRepository.findByUsername(username);
         return UserDTO.builder()
                 .username(user.getUsername())
-                .avatar_key(user.getAvatar_key())
+                .avatar(user.getAvatar())
+                .avatars(avatarService.getAllAvatars())
+                .labels(labelService.getAllLabels())
                 .build();
     }
 

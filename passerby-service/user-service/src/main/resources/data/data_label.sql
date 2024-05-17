@@ -1,0 +1,16 @@
+INSERT INTO t_label (id, key, color, type) VALUES (1, 'all', 'rose', 'Default');
+INSERT INTO t_label (id, key, color, type) VALUES (2, 'travel', 'orange', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (3, 'food', 'yellow', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (4, 'health', 'medallion', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (5, 'work', 'tan', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (6, 'academic', 'salt', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (7, 'financial', 'frost', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (8, 'mood', 'watermelon', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (9, 'dream', 'purple', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (10, 'todo', 'blue', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (11, 'school', 'ocean', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (12, 'interest', 'green', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (13, 'reading', 'coffee', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (14, 'gratitude', 'grey', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (15, 'ideas', 'iris', 'Custom');
+INSERT INTO t_label (id, key, color, type) VALUES (16, 'movies', 'sky', 'Custom');

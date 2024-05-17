@@ -21,7 +21,7 @@ public class LabelService {
 
     public Map<String, Label> getAllLabels() {
         List<Label> labelList = labelRepository.findAll();
-        return labelList.stream().collect(Collectors.toMap(Label::getLabel_key, label -> label));
+        return labelList.stream().collect(Collectors.toMap(Label::getKey, label -> label));
     }
 
 }

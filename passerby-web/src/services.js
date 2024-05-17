@@ -5,9 +5,12 @@
  * This code is a part of the final project of the INFO 6250 course.
  */
 
+import {baseUrl} from './constants';
+
 /* Login */
 export function fetchLogin(username) {
-  return fetch('/api/v1/session/', {
+  console.log(baseUrl);
+  return fetch(baseUrl + '/api/v1/session', {
     method: 'POST',
     headers: {
       'content-type': 'application/json', // set this header when sending JSON in the body of request
@@ -27,7 +30,7 @@ export function fetchLogin(username) {
 
 /* Logout */
 export function fetchLogout() {
-  return fetch('/api/v1/session', {
+  return fetch(baseUrl + '/api/v1/session', {
     method: 'DELETE'
   })
   .catch( err => Promise.reject({ error: 'network-error' }) )
@@ -43,7 +46,7 @@ export function fetchLogout() {
 
 /* Check for an existing session */
 export function fetchSession() {
-  return fetch('/api/v1/session')
+  return fetch(baseUrl + '/api/v1/session')
   .catch( err => Promise.reject({ error: 'network-error' }) )
   .then( response => {
     if (response.ok) {
@@ -57,7 +60,7 @@ export function fetchSession() {
 
 // Update user's avatar
 export function fetchUpdateUserAvatar(avatar) {
-  return fetch('/api/v1/session', {
+  return fetch(baseUrl + '/api/v1/session', {
     method: 'PATCH',
     headers: new Headers({
       'content-type': 'application/json',

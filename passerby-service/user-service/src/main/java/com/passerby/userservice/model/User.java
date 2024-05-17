@@ -21,5 +21,5 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
-    private String avatar_key;
+    private String avatar;
 }

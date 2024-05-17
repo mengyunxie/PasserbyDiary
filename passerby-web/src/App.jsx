@@ -199,6 +199,7 @@ function App() {
   function checkForSession() {
     fetchSession()
     .catch( err => {
+      console.log(err);
       if( err?.error === SERVER.AUTH_MISSING ) {
         return Promise.reject({ error: CLIENT.NO_SESSION }) // Expected, not a problem
       }

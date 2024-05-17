@@ -1,8 +1,6 @@
 package com.passerby.userservice.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -14,8 +12,13 @@ import lombok.*;
 @NoArgsConstructor
 public class Label {
     @Id
-    private String label_key;
-    private String label_color;
-    private String label_type;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "`key`", nullable = false)
+    private String key;
+
+    private String color;
+    private String type;
 
 }

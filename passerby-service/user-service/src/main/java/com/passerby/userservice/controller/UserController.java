@@ -21,6 +21,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/session")
+//@CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
 public class UserController {
 
@@ -53,10 +54,12 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<?> checkSession(@CookieValue(value = "sid", defaultValue = "") String sid) {
         String username = sessionService.getSessionUser(sid);
+        log.info("sid: {}, username: {}",sid, username);
         if (username == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "auth-missing"));
         }
         UserDTO user = userService.getUser(username);
+        log.info("UserDTO: {}",user);
         return ResponseEntity.ok(user);
     }
 
