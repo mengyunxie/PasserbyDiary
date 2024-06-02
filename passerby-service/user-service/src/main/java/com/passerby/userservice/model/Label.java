@@ -15,10 +15,13 @@ public class Label {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "`key`", nullable = false)
-    private String key;
+    @Column(name = "label_key")
+    private String labelKey;
 
-    private String color;
-    private String type;
+    @Column(name = "label_color")
+    private String labelColor;
+
+    @Column(name = "label_type")
+    private String labelType;
 
 }

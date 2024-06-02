@@ -17,12 +17,12 @@ public class LabelController {
     @Autowired
     private LabelService labelService;
 
-    @GetMapping("/{key}")
-    public Label getLabel(@PathVariable String key) {
-        return labelService.getLabel(key);
+    @GetMapping("/{labelKey}")
+    public Label getLabel(@PathVariable String labelKey) {
+        return labelService.getLabel(labelKey);
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     public Map<String, Label> getAllLabels() {
         return labelService.getAllLabels();
     }

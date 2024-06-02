@@ -5,7 +5,6 @@ import com.passerby.userservice.repository.LabelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,13 +14,13 @@ public class LabelService {
     @Autowired
     private LabelRepository labelRepository;
 
-    public Label getLabel(String key) {
-        return labelRepository.findById(key).orElse(null);
+    public Label getLabel(String labelKey) {
+        return labelRepository.findByLabelKey(labelKey).orElse(null);
     }
 
     public Map<String, Label> getAllLabels() {
         List<Label> labelList = labelRepository.findAll();
-        return labelList.stream().collect(Collectors.toMap(Label::getKey, label -> label));
+        return labelList.stream().collect(Collectors.toMap(Label::getLabelKey, label -> label));
     }
 
 }

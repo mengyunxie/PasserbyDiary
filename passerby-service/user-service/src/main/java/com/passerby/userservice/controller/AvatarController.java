@@ -22,7 +22,7 @@ public class AvatarController {
         return avatarService.getAvatar(key);
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     public Map<String, String> getAllAvatars() {
         return avatarService.getAllAvatars();
     }
