@@ -24,6 +24,7 @@ public class LabelController {
 
     @GetMapping()
     public Map<String, Label> getAllLabels() {
+        System.out.println("Come in - - -- ");
         return labelService.getAllLabels();
     }
 }

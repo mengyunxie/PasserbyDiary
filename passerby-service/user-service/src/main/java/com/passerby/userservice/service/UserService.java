@@ -29,16 +29,8 @@ public class UserService {
 
     @Autowired
     LabelService labelService;
-    public Result loginUser (@RequestBody LoginRequest request, HttpServletResponse response) {
-        String username = request.getUsername();
-        if(username == null || username.equals("")) {
-            return Result.error("required-username");
-        }
+    public UserDTO loginUser (@RequestBody String  username, HttpServletResponse response) {
 
-        if (!isValidUsername(username)) {
-
-            return Result.error("invalid-username");
-        }
         UserDTO userDTO = getUser(username);
         if(userDTO == null) { // New user, create default labels and avatars for this user
             userDTO = UserDTO.builder()
@@ -52,7 +44,7 @@ public class UserService {
         String sid = sessionService.addSession(username);
         ResponseCookie cookie = ResponseCookie.from("sid", sid).path("/").build();
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        return Result.success(userDTO);
+        return userDTO;
     }
 
     public void createUser(UserDTO userDTO) {

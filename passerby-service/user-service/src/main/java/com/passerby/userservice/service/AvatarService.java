@@ -22,4 +22,9 @@ public class AvatarService {
         List<Avatar> avatarList = avatarRepository.findAll();
         return avatarList.stream().collect(Collectors.toMap(Avatar::getAvatar_key, Avatar::getAvatar_value));
     }
+
+    public boolean isValidAvatar(String key) {
+        Avatar avatar = avatarRepository.findById(key).orElse(null);
+        return avatar != null;
+    }
 }

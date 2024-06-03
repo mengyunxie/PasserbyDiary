@@ -5,6 +5,8 @@ import com.passerby.userservice.dto.UpdateAvatarRequest;
 import com.passerby.userservice.dto.Result;
 import com.passerby.userservice.dto.UserDTO;
 import com.passerby.userservice.model.User;
+import com.passerby.userservice.service.AvatarService;
+import com.passerby.userservice.service.DiaryService;
 import com.passerby.userservice.service.SessionService;
 import com.passerby.userservice.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +23,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/session")
-//@CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
 public class UserController {
 
@@ -31,47 +32,61 @@ public class UserController {
     @Autowired
     private SessionService sessionService;
 
+    @Autowired
+    private AvatarService avatarService;
+
+    @Autowired
+    private DiaryService diaryService;
+
     @GetMapping("/test")
     public void test() {
         System.out.println("test");
     }
 
     @PostMapping()
-    public ResponseEntity<UserDTO> loginUser(@RequestBody LoginRequest request, HttpServletResponse response) {
-        log.info(String.valueOf(request));
-        Result result = userService.loginUser(request,response);
-        if(result.getCode() == 0) {
-            return ResponseEntity.badRequest().build();
+    public Result loginUser(@RequestBody LoginRequest request, HttpServletResponse response) {
+        String username = request.getUsername();
+        if(username == null || username.equals("")) {
+            return Result.error("required-username");
         }
 
-        UserDTO userDTO = (UserDTO) result.getData();
-        if (userDTO != null) {
-            return ResponseEntity.ok(userDTO);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // or another appropriate status
+        if (!userService.isValidUsername(username)) {
+            return Result.error("invalid-username");
         }
+        if(username.equals("dog")) {
+            return Result.error("auth-insufficient");
+        }
+
+        UserDTO userDTO = userService.loginUser(username,response);
+        return Result.success(userDTO);
     }
 
     @GetMapping()
-    public ResponseEntity<?> checkSession(@CookieValue(value = "sid", defaultValue = "") String sid) {
+    public Result checkSession(@CookieValue(value = "sid", defaultValue = "") String sid) {
         String username = sessionService.getSessionUser(sid);
-        log.info("sid: {}, username: {}",sid, username);
-        if (username == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "auth-missing"));
+        if (sid == null || username == null) {
+            return Result.error("auth-missing");
         }
-        UserDTO user = userService.getUser(username);
-        log.info("UserDTO: {}",user);
-        return ResponseEntity.ok(user);
+        UserDTO userDTO = userService.getUser(username);
+        return Result.success(userDTO);
     }
 
     @PatchMapping()
-    public ResponseEntity<?> updateUserAvatar(@RequestBody UpdateAvatarRequest request, @CookieValue(value = "sid", defaultValue = "") String sid) {
+    public Result updateUserAvatar(@RequestBody UpdateAvatarRequest request, @CookieValue(value = "sid", defaultValue = "") String sid) {
         String username = sessionService.getSessionUser(sid);
-        if (username == null || !userService.isValidUsername(username)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "auth-missing"));
+        if (sid == null || !userService.isValidUsername(username)) {
+            return Result.error("auth-missing");
         }
-        UserDTO userDTO = userService.updateUserAvatar(username, request.getAvatar());
-        return ResponseEntity.ok(userDTO);
+
+        String avatar = request.getAvatar();
+
+        if(!avatarService.isValidAvatar(avatar)) { // Check if this avatar is a system's built-in avatar
+            return Result.error("invalid-avatar");
+        }
+
+        UserDTO userDTO = userService.updateUserAvatar(username, request.getAvatar()); // Update the user's avatar
+        diaryService.updateDiariesUserAvatar(username, avatar); // Update the user's avatar of the diaries object
+        return Result.success(userDTO);
     }
 
     @DeleteMapping()
