@@ -39,20 +39,20 @@ public class UserService {
 
             return Result.error("invalid-username");
         }
-        UserDTO user = getUser(request.getUsername());
-        if(user == null) { // New user, create default labels and avatars for this user
-            user = UserDTO.builder()
+        UserDTO userDTO = getUser(username);
+        if(userDTO == null) { // New user, create default labels and avatars for this user
+            userDTO = UserDTO.builder()
                     .username(username)
                     .avatar("Default")
                     .avatars(avatarService.getAllAvatars())
                     .labels(labelService.getAllLabels())
                     .build();
-            createUser(user);
+            createUser(userDTO);
         }
         String sid = sessionService.addSession(username);
         ResponseCookie cookie = ResponseCookie.from("sid", sid).path("/").build();
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        return Result.success(user);
+        return Result.success(userDTO);
     }
 
     public void createUser(UserDTO userDTO) {
@@ -93,6 +93,7 @@ public class UserService {
 
     public UserDTO getUser(String username) {
         User user = userRepository.findByUsername(username);
+        if(user == null) return null;
         return UserDTO.builder()
                 .username(user.getUsername())
                 .avatar(user.getAvatar())

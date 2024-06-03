@@ -31,21 +31,22 @@ public class UserController {
     @Autowired
     private SessionService sessionService;
 
-
     @GetMapping("/test")
     public void test() {
         System.out.println("test");
     }
+
     @PostMapping()
-    public ResponseEntity<User> loginUser(@RequestBody LoginRequest request, HttpServletResponse response) {
+    public ResponseEntity<UserDTO> loginUser(@RequestBody LoginRequest request, HttpServletResponse response) {
+        log.info(String.valueOf(request));
         Result result = userService.loginUser(request,response);
         if(result.getCode() == 0) {
             return ResponseEntity.badRequest().build();
         }
 
-        Optional<User> user = (Optional<User>) result.getData();
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user.get());
+        UserDTO userDTO = (UserDTO) result.getData();
+        if (userDTO != null) {
+            return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // or another appropriate status
         }
