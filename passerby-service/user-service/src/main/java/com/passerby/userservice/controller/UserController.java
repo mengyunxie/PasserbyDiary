@@ -58,7 +58,12 @@ public class UserController {
         UserDTO userDTO = userService.loginUser(username);
 
         String sid = sessionService.addSession(username);
-        ResponseCookie cookie = ResponseCookie.from("sid", sid).path("/").build();
+        ResponseCookie cookie = ResponseCookie.from("sid", sid)
+                .path("/")
+                .httpOnly(true)
+                .secure(true) // This should be true if you are using HTTPS
+                .sameSite("None")
+                .build();
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
         return new ResponseEntity<>(Result.success(userDTO), HttpStatus.OK);

@@ -12,6 +12,7 @@ export function fetchLogin(username) {
 
   return fetch(baseUrl + '/api/v1/session', {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'content-type': 'application/json', // set this header when sending JSON in the body of request
     },
@@ -31,7 +32,8 @@ export function fetchLogin(username) {
 /* Logout */
 export function fetchLogout() {
   return fetch(baseUrl + '/api/v1/session', {
-    method: 'DELETE'
+    method: 'DELETE',
+    credentials: 'include',
   })
   .catch( err => Promise.reject({ error: 'network-error' }) )
   .then( response => {
@@ -46,7 +48,10 @@ export function fetchLogout() {
 
 /* Check for an existing session */
 export function fetchSession() {
-  return fetch(baseUrl + '/api/v1/session')
+  return fetch(baseUrl + '/api/v1/session', {
+    method: 'GET',
+    credentials: 'include',
+  })
   .catch( err => Promise.reject({ error: 'network-error' }) )
   .then( response => {
     if (response.ok) {
@@ -62,6 +67,7 @@ export function fetchSession() {
 export function fetchUpdateUserAvatar(avatar) {
   return fetch(baseUrl + '/api/v1/session', {
     method: 'PATCH',
+    credentials: 'include',
     headers: new Headers({
       'content-type': 'application/json',
     }),
@@ -82,6 +88,7 @@ export function fetchUpdateUserAvatar(avatar) {
 export function fetchAddDiary({details, labelKey, published}) {
   return fetch(baseUrl +'/api/v1/session/diaries', {
     method: 'POST',
+    credentials: 'include',
     headers: new Headers({
       'content-type': 'application/json',
     }),
@@ -102,6 +109,7 @@ export function fetchAddDiary({details, labelKey, published}) {
 export function fetchUpdateDiary({id, details, labelKey, published}) {
   return fetch(baseUrl +`/api/v1/session/diaries/${id}`, {
     method: 'PATCH',
+    credentials: 'include',
     headers: new Headers({
       'content-type': 'application/json',
     }),
@@ -122,6 +130,7 @@ export function fetchUpdateDiary({id, details, labelKey, published}) {
 export function fetchDeleteDiary(id) {
   return fetch(baseUrl +`/api/v1/session/diaries/${id}`, {
     method: 'DELETE',
+    credentials: 'include',
   })
   .catch( () => Promise.reject({ error: 'networkError' }) )
   .then( response => {
@@ -136,7 +145,10 @@ export function fetchDeleteDiary(id) {
 
 // Get a user's diaries of different labels
 export function fetchDiariesByLabel(label) {
-  return fetch(baseUrl +`/api/v1/session/diaries/label/${label}`)
+  return fetch(baseUrl +`/api/v1/session/diaries/label/${label}`, {
+    method: 'GET',
+    credentials: 'include',
+  })
   .catch( err => Promise.reject({ error: 'network-error' }) )
   .then( response => {
     if (response.ok) {
@@ -150,7 +162,10 @@ export function fetchDiariesByLabel(label) {
 
 // Get passersby's diaries
 export function fetchPasserbyDiaries() {
-  return fetch(baseUrl +'/api/v1/session/diaries')
+  return fetch(baseUrl +'/api/v1/session/diaries', {
+    method: 'GET',
+    credentials: 'include',
+  })
   .catch( err => Promise.reject({ error: 'network-error' }) )
   .then( response => {
     if (response.ok) {
@@ -164,7 +179,10 @@ export function fetchPasserbyDiaries() {
 
 // Get a user's passersby's diaries
 export function fetchMyPasserbyDiaries() {
-  return fetch(baseUrl +'/api/v1/session/diaries/username/mine')
+  return fetch(baseUrl +'/api/v1/session/diaries/username/mine', {
+    method: 'GET',
+    credentials: 'include',
+  })
   .catch( err => Promise.reject({ error: 'network-error' }) )
   .then( response => {
     if (response.ok) {

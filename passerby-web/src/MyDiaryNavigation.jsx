@@ -32,11 +32,11 @@ function MyDiaryNavigation({
                             >
                                 { Object.values(labels).map( label => (
                                     <option 
-                                        key={label.key} 
+                                        key={label.labelKey} 
                                         className="navigation-select-item" 
-                                        value={label.key}
+                                        value={label.labelKey}
                                     >
-                                        {label.key}
+                                        {label.labelKey}
                                     </option>
                                 ))}
                             </select>
