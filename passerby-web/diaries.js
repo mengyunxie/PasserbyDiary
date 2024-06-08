@@ -19,7 +19,7 @@ function isValid(details) {
     return isValid;
 }
 
-function addDiary({user, label, isPasserby, details}) {
+function addDiary({user, label, published, details}) {
     const id = uuid();
     const date = Date.now();
     // The intro attribute is the first 50 letters of the details
@@ -31,7 +31,7 @@ function addDiary({user, label, isPasserby, details}) {
         avatar: user.avatar,
         date,
         label,
-        isPasserby, 
+        published, 
         details,
         intro,
     };
@@ -47,9 +47,9 @@ function getDiary(id) {
     return diaries[id];
 }
 
-function updateDiary({id, label, isPasserby, details}) {
+function updateDiary({id, label, published, details}) {
     diaries[id].label = label;
-    diaries[id].isPasserby = isPasserby;
+    diaries[id].published = published;
     diaries[id].details = details;
     diaries[id].intro = details.length > 50 ? `${details.substring(0, 50)}...` : details;
 }
@@ -74,11 +74,11 @@ function getDiariesByLabel({username, label}) {
 
 /* Get all passerby diaries by chronological order */
 function getPasserbyDiaries() {
-    return Object.values(diaries).filter((item) => item?.isPasserby).sort((item1,item2) => item2.date - item1.date);
+    return Object.values(diaries).filter((item) => item?.published).sort((item1,item2) => item2.date - item1.date);
 }
 
 function getMinePasserbyDiaries(username) {
-    return Object.values(diaries).filter((item) => item?.isPasserby && item?.username == username).sort((item1,item2) => item2.date - item1.date);
+    return Object.values(diaries).filter((item) => item?.published && item?.username == username).sort((item1,item2) => item2.date - item1.date);
 }
 
 module.exports = {

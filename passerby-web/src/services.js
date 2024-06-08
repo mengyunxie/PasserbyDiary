@@ -9,7 +9,7 @@ import {baseUrl} from './constants';
 
 /* Login */
 export function fetchLogin(username) {
-  console.log(baseUrl);
+
   return fetch(baseUrl + '/api/v1/session', {
     method: 'POST',
     headers: {
@@ -79,13 +79,13 @@ export function fetchUpdateUserAvatar(avatar) {
 }
 
 // Add a new diary
-export function fetchAddDiary({details, labelKey, isPasserby}) {
-  return fetch('/api/v1/diaries', {
+export function fetchAddDiary({details, labelKey, published}) {
+  return fetch(baseUrl +'/api/v1/session/diaries', {
     method: 'POST',
     headers: new Headers({
       'content-type': 'application/json',
     }),
-    body: JSON.stringify({details, labelKey, isPasserby}),
+    body: JSON.stringify({details, labelKey, published}),
   })
   .catch( () => Promise.reject({ error: 'networkError' }) )
   .then( response => {
@@ -99,13 +99,13 @@ export function fetchAddDiary({details, labelKey, isPasserby}) {
 }
 
 // Update user's diary
-export function fetchUpdateDiary({id, details, labelKey, isPasserby}) {
-  return fetch(`/api/v1/diaries/${id}`, {
+export function fetchUpdateDiary({id, details, labelKey, published}) {
+  return fetch(baseUrl +`/api/v1/session/diaries/${id}`, {
     method: 'PATCH',
     headers: new Headers({
       'content-type': 'application/json',
     }),
-    body: JSON.stringify({details, labelKey, isPasserby}),
+    body: JSON.stringify({details, labelKey, published}),
   })
   .catch( () => Promise.reject({ error: 'networkError' }) )
   .then( response => {
@@ -120,7 +120,7 @@ export function fetchUpdateDiary({id, details, labelKey, isPasserby}) {
 
 // Delete user's diary
 export function fetchDeleteDiary(id) {
-  return fetch(`/api/v1/diaries/${id}`, {
+  return fetch(baseUrl +`/api/v1/session/diaries/${id}`, {
     method: 'DELETE',
   })
   .catch( () => Promise.reject({ error: 'networkError' }) )
@@ -136,7 +136,7 @@ export function fetchDeleteDiary(id) {
 
 // Get a user's diaries of different labels
 export function fetchDiariesByLabel(label) {
-  return fetch(`/api/v1/diariesbylabel/${label}`)
+  return fetch(baseUrl +`/api/v1/session/diaries/label/${label}`)
   .catch( err => Promise.reject({ error: 'network-error' }) )
   .then( response => {
     if (response.ok) {
@@ -150,7 +150,7 @@ export function fetchDiariesByLabel(label) {
 
 // Get passersby's diaries
 export function fetchPasserbyDiaries() {
-  return fetch('/api/v1/passersby/all')
+  return fetch(baseUrl +'/api/v1/session/diaries')
   .catch( err => Promise.reject({ error: 'network-error' }) )
   .then( response => {
     if (response.ok) {
@@ -164,7 +164,7 @@ export function fetchPasserbyDiaries() {
 
 // Get a user's passersby's diaries
 export function fetchMyPasserbyDiaries() {
-  return fetch('/api/v1/passersby/mine')
+  return fetch(baseUrl +'/api/v1/session/diaries/username/mine')
   .catch( err => Promise.reject({ error: 'network-error' }) )
   .then( response => {
     if (response.ok) {

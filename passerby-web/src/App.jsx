@@ -44,16 +44,16 @@ function App() {
     dispatch({ type: ACTIONS.WAIT_LOG_IN }); 
     fetchLogin(username)
     .then( res => {
-      dispatch({ type: ACTIONS.LOG_IN, username: res.username,  avatar: res.avatar, labels: res.labels, avatars: res.avatars});
+      dispatch({ type: ACTIONS.LOG_IN, username: res.data.username,  avatar: res.data.avatar, labels: res.data.labels, avatars: res.data.avatars});
       onSetMenu(state.menu);
       dispatch({ type: ACTIONS.START_LOADING_DATA });
       return fetchPasserbyDiaries();
     })
     .then( res => {
-      dispatch({ type: ACTIONS.GET_PASSERBYDIARIES, passerbyDiaries: res });
+      dispatch({ type: ACTIONS.GET_PASSERBYDIARIES, passerbyDiaries: res.data });
     })
     .catch( err => {
-      dispatch({ type: ACTIONS.REPORT_ERROR, error: err?.error });
+      dispatch({ type: ACTIONS.REPORT_ERROR, error: err.msg });
       dispatch({ type: ACTIONS.LOG_OUT });
     });
   };
@@ -64,7 +64,7 @@ function App() {
     dispatch({ type: ACTIONS.LOG_OUT });
     fetchLogout() // We don't really care about results
     .catch( err => {
-      dispatch({ type: ACTIONS.REPORT_ERROR, error: err?.error });
+      dispatch({ type: ACTIONS.REPORT_ERROR, error: err.msg });
     });
   };
 
@@ -97,40 +97,40 @@ function App() {
       dispatch({ type: ACTIONS.TOGGLE_NAVIGATION, currentNavigation: NAVIGATION[SIDE_MENU.MYDIARY].DEFAULT, previousNavigation: state.currentNavigation});
     })
     .catch( err => {
-      dispatch({ type: ACTIONS.REPORT_ERROR, error: err?.error });
-      if( err?.error === SERVER.AUTH_MISSING ) {
+      dispatch({ type: ACTIONS.REPORT_ERROR, error: err.msg });
+      if( err.msg === SERVER.AUTH_MISSING ) {
         dispatch({ type: ACTIONS.LOG_OUT });
       }
     });
   }
 
   /* Update diary */
-  function onUpdateDiary({id, details, labelKey, isPasserby}) {
+  function onUpdateDiary({id, details, labelKey, published}) {
     dispatch({ type: ACTIONS.START_LOADING_DATA });
-    fetchUpdateDiary({id, details, labelKey, isPasserby})
+    fetchUpdateDiary({id, details, labelKey, published})
     .then( res => {
-      dispatch({ type: ACTIONS.UPDATE_DIARY, diary: res });
+      dispatch({ type: ACTIONS.UPDATE_DIARY, diary: res.data });
       dispatch({ type: ACTIONS.TOGGLE_NAVIGATION, currentNavigation: NAVIGATION[SIDE_MENU.MYDIARY].DETAIL, previousNavigation: NAVIGATION[SIDE_MENU.MYDIARY].DEFAULT});
     })
     .catch( err => {
-      dispatch({ type: ACTIONS.REPORT_ERROR, error: err?.error });
-      if( err?.error === SERVER.AUTH_MISSING ) {
+      dispatch({ type: ACTIONS.REPORT_ERROR, error: err.msg });
+      if( err.msg === SERVER.AUTH_MISSING ) {
         dispatch({ type: ACTIONS.LOG_OUT });
       }
     });
   }
 
   /* Add a new diary */
-  function onSubmitDiary({details, labelKey, isPasserby}) {
+  function onSubmitDiary({details, labelKey, published}) {
     dispatch({ type: ACTIONS.START_LOADING_DATA });
-    fetchAddDiary({details, labelKey, isPasserby})
+    fetchAddDiary({details, labelKey, published})
     .then( res => {
-      dispatch({ type: ACTIONS.ADD_DIARY, diary: res });
+      dispatch({ type: ACTIONS.ADD_DIARY, diary: res.data });
       dispatch({ type: ACTIONS.TOGGLE_NAVIGATION, currentNavigation: NAVIGATION[SIDE_MENU.MYDIARY].DETAIL, previousNavigation: NAVIGATION[SIDE_MENU.MYDIARY].DEFAULT});
     })
     .catch( err => {
-      dispatch({ type: ACTIONS.REPORT_ERROR, error: err?.error });
-      if( err?.error === SERVER.AUTH_MISSING ) {
+      dispatch({ type: ACTIONS.REPORT_ERROR, error: err.msg });
+      if( err.msg === SERVER.AUTH_MISSING ) {
         dispatch({ type: ACTIONS.LOG_OUT });
       }
     });
@@ -141,11 +141,11 @@ function App() {
     dispatch({ type: ACTIONS.START_LOADING_DATA });
     fetchUpdateUserAvatar(avatar)
     .then( res => {
-      dispatch({ type: ACTIONS.UPDATE_AVATAR, avatar: res.avatar });
+      dispatch({ type: ACTIONS.UPDATE_AVATAR, avatar: res.data.avatar });
     })
     .catch( err => {
-      dispatch({ type: ACTIONS.REPORT_ERROR, error: err?.error });
-      if( err?.error === SERVER.AUTH_MISSING ) {
+      dispatch({ type: ACTIONS.REPORT_ERROR, error: err.msg });
+      if( err.msg === SERVER.AUTH_MISSING ) {
         dispatch({ type: ACTIONS.LOG_OUT });
       }
     });
@@ -156,11 +156,11 @@ function App() {
     dispatch({ type: ACTIONS.START_LOADING_DATA });
     fetchPasserbyDiaries()
     .then( res => {
-      dispatch({ type: ACTIONS.GET_PASSERBYDIARIES, passerbyDiaries: res });
+      dispatch({ type: ACTIONS.GET_PASSERBYDIARIES, passerbyDiaries: res.data });
     })
     .catch( err => {
-      dispatch({ type: ACTIONS.REPORT_ERROR, error: err?.error });
-      if( err?.error === SERVER.AUTH_MISSING ) {
+      dispatch({ type: ACTIONS.REPORT_ERROR, error: err.msg });
+      if( err.msg === SERVER.AUTH_MISSING ) {
         dispatch({ type: ACTIONS.LOG_OUT });
       }
     });
@@ -171,11 +171,11 @@ function App() {
     dispatch({ type: ACTIONS.START_LOADING_DATA });
     fetchMyPasserbyDiaries()
     .then( res => {
-      dispatch({ type: ACTIONS.GET_PASSERBYDIARIES, passerbyDiaries: res });
+      dispatch({ type: ACTIONS.GET_PASSERBYDIARIES, passerbyDiaries: res.data });
     })
     .catch( err => {
-      dispatch({ type: ACTIONS.REPORT_ERROR, error: err?.error });
-      if( err?.error === SERVER.AUTH_MISSING ) {
+      dispatch({ type: ACTIONS.REPORT_ERROR, error: err.msg });
+      if( err.msg === SERVER.AUTH_MISSING ) {
         dispatch({ type: ACTIONS.LOG_OUT });
       }
     });
@@ -186,42 +186,50 @@ function App() {
     dispatch({ type: ACTIONS.START_LOADING_DATA });
     fetchDiariesByLabel(currentLabelKey || DEFAULT_LABEL_KEY)
     .then( res => {
-      dispatch({ type: ACTIONS.GET_DIARIES, diaries: res});
+      dispatch({ type: ACTIONS.GET_DIARIES, diaries: res.data});
     })
     .catch( err => {
-      dispatch({ type: ACTIONS.REPORT_ERROR, error: err?.error });
-      if( err?.error === SERVER.AUTH_MISSING ) {
+      dispatch({ type: ACTIONS.REPORT_ERROR, error: err.msg });
+      if( err.msg === SERVER.AUTH_MISSING ) {
         dispatch({ type: ACTIONS.LOG_OUT });
       }
     });
   }
 
   function checkForSession() {
+    console.log("come in - - - checkForSession ");
     fetchSession()
     .catch( err => {
+      console.log("1 catch err - - - checkForSession : ");
       console.log(err);
-      if( err?.error === SERVER.AUTH_MISSING ) {
-        return Promise.reject({ error: CLIENT.NO_SESSION }) // Expected, not a problem
+      
+      if( err.msg === SERVER.AUTH_MISSING ) {
+        console.log("expected - - ");
+        return Promise.reject({ msg: CLIENT.NO_SESSION }) // Expected, not a problem
       }
       return Promise.reject(err); // Pass any other error unchanged
     })
     .then( res => { // The returned object from the service call
-      dispatch({ type: ACTIONS.LOG_IN, username: res.username,  avatar: res.avatar, labels: res.labels, avatars: res.avatars});
+      console.log("2 catch then - - - checkForSession : ");
+      dispatch({ type: ACTIONS.LOG_IN, username: res.data.username,  avatar: res.data.avatar, labels: res.data.labels, avatars: res.data.avatars});
       onSetMenu(state.menu);
       dispatch({ type: ACTIONS.START_LOADING_DATA });
       return fetchPasserbyDiaries();
     })
     .then( res => {
-      dispatch({ type: ACTIONS.GET_PASSERBYDIARIES, passerbyDiaries: res });
+      console.log("3 catch then - - - checkForSession : ");
+      dispatch({ type: ACTIONS.GET_PASSERBYDIARIES, passerbyDiaries: res.data });
     })
     .catch( err => {
-      if( err?.error === CLIENT.NO_SESSION ) { // expected "error"
+      console.log("4 catch error - - - checkForSession : ");
+      console.log(err);
+      if( err.msg === CLIENT.NO_SESSION ) { // expected "error"
         dispatch({ type: ACTIONS.CLEAR_ERROR });
         dispatch({ type: ACTIONS.LOG_OUT });
         return;
       }
       // For unexpected errors, report them
-      dispatch({ type: ACTIONS.REPORT_ERROR, error: err?.error });
+      dispatch({ type: ACTIONS.REPORT_ERROR, error: err.msg });
     });
   }
 

@@ -110,7 +110,7 @@ app.post('/api/v1/diaries', (req, res) => {
     res.status(401).json({ error: 'auth-missing' });
     return;
   }
-  const {details, labelKey, isPasserby} = req.body;
+  const {details, labelKey, published} = req.body;
 
   if(!details) { // Details of a diary is empty
     res.status(400).json({ error: 'required-diary-details' });
@@ -130,7 +130,7 @@ app.post('/api/v1/diaries', (req, res) => {
   const user = users.getUser(username);
 
   const label = labels.getLabel(labelKey);
-  const id = diaries.addDiary({user, label, isPasserby, details});
+  const id = diaries.addDiary({user, label, published, details});
 
   res.json(diaries.getDiary(id));
 });
@@ -146,7 +146,7 @@ app.patch('/api/v1/diaries/:id', (req, res) => {
   }
 
   const { id } = req.params;
-  const {details, labelKey, isPasserby} = req.body;
+  const {details, labelKey, published} = req.body;
 
   if(!details) { // Details of a diary is empty
     res.status(400).json({ error: 'required-diary-details' });
@@ -175,7 +175,7 @@ app.patch('/api/v1/diaries/:id', (req, res) => {
     return;
   }
   const label = labels.getLabel(labelKey);
-  diaries.updateDiary({id, label, isPasserby, details});
+  diaries.updateDiary({id, label, published, details});
   res.json(diaries.getDiary(id));
 });
 

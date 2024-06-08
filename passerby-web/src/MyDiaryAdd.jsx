@@ -17,14 +17,14 @@ function MyDiaryAdd({
     const [diary, setDiary] = useState({
         details: '',
         labelKey: DEFAULT_LABEL_KEY,
-        isPasserby: false
+        published: false
     });
 
     function handleSubmit(e) {
         // Prevent the browser from reloading the page
         e.preventDefault();
         if(diary.details) {
-            onSubmitDiary({ details: diary.details, labelKey: diary.labelKey, isPasserby: diary.isPasserby });
+            onSubmitDiary({ details: diary.details, labelKey: diary.labelKey, published: diary.published });
         }
     }
     
@@ -78,10 +78,10 @@ function MyDiaryAdd({
                 <span className='mydiaries-form-title'>Post to Passerby: </span>
                 <input 
                     type="checkbox" 
-                    name="isPasserby" 
+                    name="published" 
                     className='mydiaries-form-checkbox'
-                    checked={diary.isPasserby} 
-                    onChange={e => setDiary({...diary, isPasserby: e.target.checked})} 
+                    checked={diary.published} 
+                    onChange={e => setDiary({...diary, published: e.target.checked})} 
                 />
             </div>
             <div className='mydiaries-form-row form-textarea'>

@@ -11,6 +11,8 @@ import com.passerby.userservice.service.SessionService;
 import com.passerby.userservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -35,16 +37,16 @@ public class DiaryController {
 
     // Add: Post - /api/v1/diaries
     @PostMapping
-    public Result addDiary(@RequestBody DiaryRequest diaryRequest, @CookieValue(value = "sid", defaultValue = "") String sid) {
+    public ResponseEntity<Result> addDiary(@RequestBody DiaryRequest diaryRequest, @CookieValue(value = "sid", defaultValue = "") String sid) {
         String username = sessionService.getSessionUser(sid);
         if (sid == null || username == null) {
-            return Result.error("auth-missing");
+            return new ResponseEntity<>(Result.error("auth-missing"), HttpStatus.UNAUTHORIZED);
         }
         if(!diaryService.isValid(diaryRequest.getDetails())) {
-            return Result.error("invalid-diary-details");
+            return new ResponseEntity<>(Result.error("invalid-diary-details"), HttpStatus.BAD_REQUEST);
         }
         if(!labelService.isValid(diaryRequest.getLabelKey())) {
-            return Result.error("invalid-label");
+            return new ResponseEntity<>(Result.error("invalid-label"), HttpStatus.BAD_REQUEST);
         }
 
         UserDTO userDTO = userService.getUser(username);
@@ -59,31 +61,31 @@ public class DiaryController {
                 .build();
         diaryDTO.setDetails(diaryRequest.getDetails());
         diaryDTO = diaryService.addDiary(diaryDTO);
-        return Result.success(diaryDTO);
+        return new ResponseEntity<>(Result.success(diaryDTO), HttpStatus.OK);
     }
 
     // update: PATCH - /${diaryId}
     @PatchMapping("/{diaryId}")
-    public Result updateDiary(@PathVariable String diaryId, @RequestBody DiaryRequest diaryRequest, @CookieValue(value = "sid", defaultValue = "") String sid) {
+    public ResponseEntity<Result> updateDiary(@PathVariable String diaryId, @RequestBody DiaryRequest diaryRequest, @CookieValue(value = "sid", defaultValue = "") String sid) {
         String username = sessionService.getSessionUser(sid);
         if (sid == null || username == null) {
-            return Result.error("auth-missing");
+            return new ResponseEntity<>(Result.error("auth-missing"), HttpStatus.UNAUTHORIZED);
         }
         if(!diaryService.isValid(diaryRequest.getDetails())) {
-            return Result.error("invalid-diary-details");
+            return new ResponseEntity<>(Result.error("invalid-diary-details"), HttpStatus.BAD_REQUEST);
         }
         if(!labelService.isValid(diaryRequest.getLabelKey())) {
-            return Result.error("invalid-label");
+            return new ResponseEntity<>(Result.error("invalid-label"), HttpStatus.BAD_REQUEST);
         }
 
         boolean exists = diaryService.contains(diaryId);
         if(!exists) {
-            return Result.error("noSuchDiaryId");
+            return new ResponseEntity<>(Result.error("noSuchDiaryId"), HttpStatus.NOT_FOUND);
         }
 
         DiaryDTO diaryDTO = diaryService.getDiary(diaryId);
         if(!diaryDTO.getUsername().equals(username)) { // Check if the User id is match diary id
-            return Result.error("notMatchUser");
+            return new ResponseEntity<>(Result.error("notMatchUser"), HttpStatus.NOT_FOUND);
         }
 
         Label label = labelService.getLabel(diaryRequest.getLabelKey());
@@ -92,18 +94,18 @@ public class DiaryController {
         diaryDTO.setPublished(diaryRequest.isPublished());
         diaryDTO = diaryService.updateDiary(diaryId, diaryDTO);
 
-        return Result.success(diaryDTO);
+        return new ResponseEntity<>(Result.success(diaryDTO), HttpStatus.OK);
     }
 
     // delete : DELETE - /${diaryId}
     @DeleteMapping("/{diaryId}")
-    public Result deleteDiary(@PathVariable String diaryId, @CookieValue(value = "sid", defaultValue = "") String sid) {
+    public ResponseEntity<Result> deleteDiary(@PathVariable String diaryId, @CookieValue(value = "sid", defaultValue = "") String sid) {
         String username = sessionService.getSessionUser(sid);
         if (sid == null || username == null) {
-            return Result.error("auth-missing");
+            return new ResponseEntity<>(Result.error("auth-missing"), HttpStatus.UNAUTHORIZED);
         }
         if (!userService.isValidUsername(username)) {
-            return Result.error("invalid-username");
+            return new ResponseEntity<>(Result.error("invalid-username"), HttpStatus.BAD_REQUEST);
         }
 
         boolean exists = diaryService.contains(diaryId);
@@ -111,53 +113,53 @@ public class DiaryController {
         // Create the response map
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", exists ? ("The diaryId:  " + diaryId + " has be deleted"):("Diary " + diaryId + " did not exist"));
-        return Result.success(responseBody);
+        return new ResponseEntity<>(Result.success(responseBody), HttpStatus.OK);
     }
 
     @GetMapping("/{diaryId}")
-    public Result getDiary(@PathVariable String diaryId, @CookieValue(value = "sid", defaultValue = "") String sid) {
+    public ResponseEntity<Result> getDiary(@PathVariable String diaryId, @CookieValue(value = "sid", defaultValue = "") String sid) {
         String username = sessionService.getSessionUser(sid);
         if (sid == null || username == null) {
-            return Result.error("auth-missing");
+            return new ResponseEntity<>(Result.error("auth-missing"), HttpStatus.UNAUTHORIZED);
         }
         boolean exists = diaryService.contains(diaryId);
         if(!exists) {
-            return Result.error("noSuchDiaryId");
+            return new ResponseEntity<>(Result.error("noSuchDiaryId"), HttpStatus.NOT_FOUND);
         }
         DiaryDTO diaryDTO = diaryService.getDiary(diaryId);
-        return Result.success(diaryDTO);
+        return new ResponseEntity<>(Result.success(diaryDTO), HttpStatus.OK);
     }
 
     @GetMapping()
-    public Result getPublishedDiaries(@CookieValue(value = "sid", defaultValue = "") String sid) {
+    public ResponseEntity<Result> getPublishedDiaries(@CookieValue(value = "sid", defaultValue = "") String sid) {
         String username = sessionService.getSessionUser(sid);
         if (sid == null || username == null) {
-            return Result.error("auth-missing");
+            return new ResponseEntity<>(Result.error("auth-missing"), HttpStatus.UNAUTHORIZED);
         }
         List<DiaryDTO> diaryList = diaryService.getPublishedDiaries();
-        return Result.success(diaryList);
+        return new ResponseEntity<>(Result.success(diaryList), HttpStatus.OK);
     }
 
     // Get a user's passersby's diaries: /username/{username}
     @GetMapping("/username/mine")
-    public Result getPublishedDiariesByUsername(@CookieValue(value = "sid", defaultValue = "") String sid) {
+    public ResponseEntity<Result> getPublishedDiariesByUsername(@CookieValue(value = "sid", defaultValue = "") String sid) {
         String username = sessionService.getSessionUser(sid);
         if (sid == null || username == null) {
-            return Result.error("auth-missing");
+            return new ResponseEntity<>(Result.error("auth-missing"), HttpStatus.UNAUTHORIZED);
         }
         List<DiaryDTO> diaryList = diaryService.getPublishedDiariesByUsername(username);
-        return Result.success(diaryList);
+        return new ResponseEntity<>(Result.success(diaryList), HttpStatus.OK);
     }
 
     // Get a user's diaries of different labels: /label/{label}
     @GetMapping("/label/{labelKey}")
-    public Result getDiariesByLabel(@PathVariable String labelKey, @CookieValue(value = "sid", defaultValue = "") String sid) {
+    public ResponseEntity<Result> getDiariesByLabel(@PathVariable String labelKey, @CookieValue(value = "sid", defaultValue = "") String sid) {
         String username = sessionService.getSessionUser(sid);
         if (sid == null || username == null) {
-            return Result.error("auth-missing");
+            return new ResponseEntity<>(Result.error("auth-missing"), HttpStatus.UNAUTHORIZED);
         }
         if(!labelService.isValid(labelKey)) {
-            return Result.error("invalid-label");
+            return new ResponseEntity<>(Result.error("invalid-label"), HttpStatus.BAD_REQUEST);
         }
         List<DiaryDTO> diaryList;
 
@@ -167,6 +169,6 @@ public class DiaryController {
             diaryList = diaryService.getDiariesByUsernameAndLabel(username, labelKey);
         }
 
-        return Result.success(diaryList);
+        return new ResponseEntity<>(Result.success(diaryList), HttpStatus.OK);
     }
 }
