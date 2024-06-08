@@ -1,5 +1,6 @@
 package com.passerby.userservice.dto;
 
+import com.passerby.userservice.model.Label;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,13 +13,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DiaryDTO {
-    private Long id;
+    private String id;
     private String username;
     private String avatar;
-    private String date;
-    private String label;
-    private boolean isPasserby;
+    private LocalDateTime date;
+    private Label label;
+    private boolean published;
     private String details;
     private String intro;
-
+    // Optionally, you can add a method to set intro automatically when details are set
+    public void setDetails(String details) {
+        this.details = details;
+        this.intro = details != null && details.length() > 50 ? details.substring(0, 50) : details;
+    }
 }

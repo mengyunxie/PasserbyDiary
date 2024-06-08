@@ -23,4 +23,9 @@ public class LabelService {
         return labelList.stream().collect(Collectors.toMap(Label::getLabelKey, label -> label));
     }
 
+    public boolean isValid(String labelKey) {
+        Label label = labelRepository.findByLabelKey(labelKey).orElse(null);
+        return label != null;
+    }
+
 }

@@ -9,18 +9,15 @@ import java.util.UUID;
 @Service
 public class SessionService {
 
-    private final SessionRepository sessionRepository;
-
     @Autowired
-    public SessionService(SessionRepository sessionRepository) {
-        this.sessionRepository = sessionRepository;
-    }
+    private SessionRepository sessionRepository;
 
     public String addSession(String username) {
         String sid = UUID.randomUUID().toString();
-        Session session = new Session();
-        session.setSid(sid);
-        session.setUsername(username);
+        Session session = Session.builder()
+                .sid(sid)
+                .username(username)
+                .build();
         sessionRepository.save(session);
         return sid;
     }

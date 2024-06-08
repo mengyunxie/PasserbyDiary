@@ -24,4 +24,10 @@ public class Result {
     public static Result error(String msg){
         return new Result(0,msg,null);
     }
+    public static Result error(Object data){
+        return new Result(0,"error",data);
+    }
+    public static Result error(String msg, Object data){
+        return new Result(0,msg,data);
+    }
 }

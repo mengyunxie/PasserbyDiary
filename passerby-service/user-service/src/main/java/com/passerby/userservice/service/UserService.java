@@ -23,14 +23,12 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private SessionService sessionService;
-    @Autowired
     AvatarService avatarService;
 
     @Autowired
     LabelService labelService;
-    public UserDTO loginUser (@RequestBody String  username, HttpServletResponse response) {
 
+    public UserDTO loginUser (@RequestBody String  username) {
         UserDTO userDTO = getUser(username);
         if(userDTO == null) { // New user, create default labels and avatars for this user
             userDTO = UserDTO.builder()
@@ -41,9 +39,6 @@ public class UserService {
                     .build();
             createUser(userDTO);
         }
-        String sid = sessionService.addSession(username);
-        ResponseCookie cookie = ResponseCookie.from("sid", sid).path("/").build();
-        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return userDTO;
     }
 
@@ -60,12 +55,7 @@ public class UserService {
         User user = userRepository.findByUsername(username);
         user.setAvatar(avatar);
         userRepository.save(user);
-        return UserDTO.builder()
-                .username(user.getUsername())
-                .avatar(user.getAvatar())
-                .avatars(avatarService.getAllAvatars())
-                .labels(labelService.getAllLabels())
-                .build();
+        return mapToUserDTO(user);
     }
 
     public List<UserDTO> getUsers() {
@@ -86,12 +76,7 @@ public class UserService {
     public UserDTO getUser(String username) {
         User user = userRepository.findByUsername(username);
         if(user == null) return null;
-        return UserDTO.builder()
-                .username(user.getUsername())
-                .avatar(user.getAvatar())
-                .avatars(avatarService.getAllAvatars())
-                .labels(labelService.getAllLabels())
-                .build();
+        return mapToUserDTO(user);
     }
 
     public boolean isValidUsername(String username) {
