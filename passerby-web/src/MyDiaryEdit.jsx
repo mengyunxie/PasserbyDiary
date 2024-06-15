@@ -16,7 +16,7 @@ function MyDiaryEdit({
 
     const [diary, setDiary] = useState({
         details: currentDiary.details,
-        labelKey: currentDiary.label.key,
+        labelKey: currentDiary.label.labelKey,
         published: currentDiary.published,
     });
 
@@ -68,10 +68,10 @@ function MyDiaryEdit({
                 >
                     { Object.values(labels).map( label => (
                         <option 
-                            key={label.key}
-                            value={label.key}
+                            key={label.labelKey}
+                            value={label.labelKey}
                         >
-                            {label.key}
+                            {label.labelKey}
                         </option>
                     ))}
                 </select>

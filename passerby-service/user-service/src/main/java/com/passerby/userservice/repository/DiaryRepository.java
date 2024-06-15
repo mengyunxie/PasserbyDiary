@@ -10,10 +10,9 @@ public interface DiaryRepository extends MongoRepository<Diary, String> {
     List<Diary> findByUsername(String username);
 
     @Query("{ 'username': ?0, 'label.labelKey': ?1 }")
-    List<Diary> findByUsernameAndLabel(String username, String label);
+    List<Diary> findByUsernameAndLabel(String username, String labelKey);
     @Query("{'published': true}")
     List<Diary> findPublishedDiaries();
-    @Query("{'published': true}")
+    @Query("{'published': true, 'username': ?0}")
     List<Diary> findPublishedDiariesByUsername(String username);
-
 }

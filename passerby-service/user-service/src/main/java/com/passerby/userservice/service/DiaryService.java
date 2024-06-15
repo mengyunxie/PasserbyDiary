@@ -50,8 +50,8 @@ public class DiaryService {
         return diaries.stream().map(diary -> mapToDiaryDTO(diary)).toList();
     }
 
-    public List<DiaryDTO> getDiariesByUsernameAndLabel(String username, String label) {
-        List<Diary> diaries = diaryRepository.findByUsernameAndLabel(username, label);
+    public List<DiaryDTO> getDiariesByUsernameAndLabel(String username, String labelKey) {
+        List<Diary> diaries = diaryRepository.findByUsernameAndLabel(username, labelKey);
         return diaries.stream().map(diary -> mapToDiaryDTO(diary)).toList();
     }
 

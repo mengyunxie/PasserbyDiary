@@ -57,10 +57,10 @@ function MyDiaryDetail({
                 </button>
             </div>
             <div className="mydiaries-details-info">
-                {currentDiary.label.key !== DEFAULT_LABEL_KEY && 
-                    <div className={`mydiaries-details-label label-item-color ${currentDiary.label.color}`} >
+                {currentDiary.label.labelKey !== DEFAULT_LABEL_KEY && 
+                    <div className={`mydiaries-details-label label-item-color ${currentDiary.label.labelColor}`} >
                         <i className="gg-tag"></i>
-                        <span className='mydiaries-details-label-title'>{currentDiary.label.key}</span>
+                        <span className='mydiaries-details-label-title'>{currentDiary.label.labelKey}</span>
                     </div>
                 }
                 <span className="mydiaries-details-date">{formatDate(currentDiary.date)}</span>

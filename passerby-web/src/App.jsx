@@ -200,29 +200,21 @@ function App() {
     console.log("come in - - - checkForSession ");
     fetchSession()
     .catch( err => {
-      console.log("1 catch err - - - checkForSession : ");
-      console.log(err);
-      
       if( err.msg === SERVER.AUTH_MISSING ) {
-        console.log("expected - - ");
         return Promise.reject({ msg: CLIENT.NO_SESSION }) // Expected, not a problem
       }
       return Promise.reject(err); // Pass any other error unchanged
     })
     .then( res => { // The returned object from the service call
-      console.log("2 catch then - - - checkForSession : ");
       dispatch({ type: ACTIONS.LOG_IN, username: res.data.username,  avatar: res.data.avatar, labels: res.data.labels, avatars: res.data.avatars});
       onSetMenu(state.menu);
       dispatch({ type: ACTIONS.START_LOADING_DATA });
       return fetchPasserbyDiaries();
     })
     .then( res => {
-      console.log("3 catch then - - - checkForSession : ");
       dispatch({ type: ACTIONS.GET_PASSERBYDIARIES, passerbyDiaries: res.data });
     })
     .catch( err => {
-      console.log("4 catch error - - - checkForSession : ");
-      console.log(err);
       if( err.msg === CLIENT.NO_SESSION ) { // expected "error"
         dispatch({ type: ACTIONS.CLEAR_ERROR });
         dispatch({ type: ACTIONS.LOG_OUT });

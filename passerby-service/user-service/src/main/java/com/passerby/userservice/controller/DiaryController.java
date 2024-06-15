@@ -147,6 +147,7 @@ public class DiaryController {
         if (sid == null || username == null) {
             return new ResponseEntity<>(Result.error("auth-missing"), HttpStatus.UNAUTHORIZED);
         }
+
         List<DiaryDTO> diaryList = diaryService.getPublishedDiariesByUsername(username);
         return new ResponseEntity<>(Result.success(diaryList), HttpStatus.OK);
     }
@@ -163,7 +164,7 @@ public class DiaryController {
         }
         List<DiaryDTO> diaryList;
 
-        if(labelKey == "all") { // Get all labels' diaries
+        if(labelKey.equals("all")) { // Get all labels' diaries
             diaryList = diaryService.getDiariesByUsername(username);
         } else { // Get this label's diaries
             diaryList = diaryService.getDiariesByUsernameAndLabel(username, labelKey);
