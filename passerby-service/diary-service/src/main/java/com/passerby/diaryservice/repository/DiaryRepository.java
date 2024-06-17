@@ -1,6 +1,6 @@
-package com.passerby.userservice.repository;
+package com.passerby.diaryservice.repository;
 
-import com.passerby.userservice.model.Diary;
+import com.passerby.diaryservice.model.Diary;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 

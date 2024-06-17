@@ -1,9 +1,8 @@
-package com.passerby.userservice.service;
+package com.passerby.diaryservice.service;
 
-import com.passerby.userservice.dto.DiaryDTO;
-import com.passerby.userservice.dto.DiaryRequest;
-import com.passerby.userservice.model.Diary;
-import com.passerby.userservice.repository.DiaryRepository;
+import com.passerby.diaryservice.dto.DiaryDTO;
+import com.passerby.diaryservice.model.Diary;
+import com.passerby.diaryservice.repository.DiaryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +41,7 @@ public class DiaryService {
     }
 
     public void deleteDiary(String diaryId) {
-       diaryRepository.deleteById(diaryId);
+        diaryRepository.deleteById(diaryId);
     }
 
     public List<DiaryDTO> getPublishedDiariesByUsername(String username) {

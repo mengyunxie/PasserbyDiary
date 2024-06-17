@@ -1,12 +1,11 @@
 package com.passerby.userservice.controller;
 
+import com.passerby.userservice.client.DiaryServiceClient;
 import com.passerby.userservice.dto.LoginRequest;
 import com.passerby.userservice.dto.UpdateAvatarRequest;
 import com.passerby.userservice.dto.Result;
 import com.passerby.userservice.dto.UserDTO;
-import com.passerby.userservice.model.User;
 import com.passerby.userservice.service.AvatarService;
-import com.passerby.userservice.service.DiaryService;
 import com.passerby.userservice.service.SessionService;
 import com.passerby.userservice.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/session")
@@ -37,7 +35,7 @@ public class UserController {
     private AvatarService avatarService;
 
     @Autowired
-    private DiaryService diaryService;
+    private DiaryServiceClient diaryServiceClient;
 
     /* Create a new session (login) */
     @PostMapping()
@@ -95,7 +93,7 @@ public class UserController {
         }
 
         UserDTO userDTO = userService.updateUserAvatar(username, request.getAvatar()); // Update the user's avatar
-        diaryService.updateDiariesUserAvatar(username, avatar); // Update the user's avatar of the diaries object
+        diaryServiceClient.updateDiariesUserAvatar(username, avatar); // Update the user's avatar of the diaries object
         return new ResponseEntity<>(Result.success(userDTO), HttpStatus.OK);
     }
 
@@ -115,5 +113,24 @@ public class UserController {
         Map<String, Boolean> responseBody = new HashMap<>();
         responseBody.put("wasLoggedIn", username == null? false : !username.isEmpty());
         return new ResponseEntity<>(Result.success(responseBody), HttpStatus.OK);
+    }
+
+    // For openFein
+    @GetMapping("/user/{username}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable String username) {
+        UserDTO userDTO = userService.getUser(username);
+        return ResponseEntity.ok(userDTO);
+    }
+
+    @GetMapping("/valid/{username}")
+    public ResponseEntity<Boolean> isValidUsername(@PathVariable String username) {
+        boolean isValid = userService.isValidUsername(username);
+        return ResponseEntity.ok(isValid);
+    }
+
+    @GetMapping("/sid/{sid}")
+    public ResponseEntity<String> getSessionUser(@PathVariable String sid) {
+        String username = sessionService.getSessionUser(sid);
+        return ResponseEntity.ok(username);
     }
 }

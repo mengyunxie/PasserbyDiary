@@ -1,4 +1,4 @@
-package com.passerby.userservice.dto;
+package com.passerby.diaryservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

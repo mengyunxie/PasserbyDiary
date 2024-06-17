@@ -1,7 +1,7 @@
-package com.passerby.userservice.model;
+package com.passerby.diaryservice.model;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;

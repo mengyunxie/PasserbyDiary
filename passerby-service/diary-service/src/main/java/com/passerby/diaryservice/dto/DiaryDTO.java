@@ -1,6 +1,6 @@
-package com.passerby.userservice.dto;
+package com.passerby.diaryservice.dto;
 
-import com.passerby.userservice.model.Label;
+import com.passerby.diaryservice.model.Label;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
