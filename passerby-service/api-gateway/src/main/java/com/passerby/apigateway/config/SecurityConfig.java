@@ -14,8 +14,7 @@ public class SecurityConfig {
     private static final List<String> WHITELISTED_PATHS = Arrays.asList(
             "/api/v1/session/**",
             "/api/v1/diaries/**",
-            "/api/v1/avatars/**",
-            "/api/v1/labels/**"
+            "/api/v1/users/**"
     );
 
     @Bean

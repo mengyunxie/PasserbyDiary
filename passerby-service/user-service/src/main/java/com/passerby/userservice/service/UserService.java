@@ -1,15 +1,10 @@
 package com.passerby.userservice.service;
 
-import com.passerby.userservice.dto.LoginRequest;
-import com.passerby.userservice.dto.Result;
 import com.passerby.userservice.dto.UserDTO;
 import com.passerby.userservice.model.User;
 import com.passerby.userservice.repository.UserRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
