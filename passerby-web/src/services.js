@@ -86,7 +86,7 @@ export function fetchUpdateUserAvatar(avatar) {
 
 // Add a new diary
 export function fetchAddDiary({details, labelKey, published}) {
-  return fetch(baseUrl +'/api/v1/session/diaries', {
+  return fetch(baseUrl +'/api/v1/diaries', {
     method: 'POST',
     credentials: 'include',
     headers: new Headers({
@@ -107,7 +107,7 @@ export function fetchAddDiary({details, labelKey, published}) {
 
 // Update user's diary
 export function fetchUpdateDiary({id, details, labelKey, published}) {
-  return fetch(baseUrl +`/api/v1/session/diaries/${id}`, {
+  return fetch(baseUrl +`/api/v1/diaries/${id}`, {
     method: 'PATCH',
     credentials: 'include',
     headers: new Headers({
@@ -128,7 +128,7 @@ export function fetchUpdateDiary({id, details, labelKey, published}) {
 
 // Delete user's diary
 export function fetchDeleteDiary(id) {
-  return fetch(baseUrl +`/api/v1/session/diaries/${id}`, {
+  return fetch(baseUrl +`/api/v1/diaries/${id}`, {
     method: 'DELETE',
     credentials: 'include',
   })
@@ -145,7 +145,7 @@ export function fetchDeleteDiary(id) {
 
 // Get a user's diaries of different labels
 export function fetchDiariesByLabel(label) {
-  return fetch(baseUrl +`/api/v1/session/diaries/label/${label}`, {
+  return fetch(baseUrl +`/api/v1/diaries/label/${label}`, {
     method: 'GET',
     credentials: 'include',
   })
@@ -162,7 +162,7 @@ export function fetchDiariesByLabel(label) {
 
 // Get passersby's diaries
 export function fetchPasserbyDiaries() {
-  return fetch(baseUrl +'/api/v1/session/diaries', {
+  return fetch(baseUrl +'/api/v1/diaries', {
     method: 'GET',
     credentials: 'include',
   })
@@ -179,7 +179,7 @@ export function fetchPasserbyDiaries() {
 
 // Get a user's passersby's diaries
 export function fetchMyPasserbyDiaries() {
-  return fetch(baseUrl +'/api/v1/session/diaries/username/mine', {
+  return fetch(baseUrl +'/api/v1/diaries/username/mine', {
     method: 'GET',
     credentials: 'include',
   })

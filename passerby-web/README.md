@@ -34,10 +34,6 @@ npm run build
 
 # Run the project
 npm run start
-
-# For development mode
-npm run server
-npm run dev
 ```
 
 
