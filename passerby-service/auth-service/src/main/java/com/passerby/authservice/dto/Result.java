@@ -1,4 +1,4 @@
-package com.passerby.userservice.dto;
+package com.passerby.authservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

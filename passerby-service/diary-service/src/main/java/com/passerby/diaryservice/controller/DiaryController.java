@@ -36,6 +36,11 @@ public class DiaryController {
     @Autowired
     private UserServiceClient userServiceClient;
 
+    @GetMapping("/test")
+    public void test() {
+        log.info("Diary test");
+    }
+
     // Add: Post - /api/v1/diaries
     @PostMapping
     public ResponseEntity<Result> addDiary(@RequestBody DiaryRequest diaryRequest, @CookieValue(value = "sid", defaultValue = "") String sid) {

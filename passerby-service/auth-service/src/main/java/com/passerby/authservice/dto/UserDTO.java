@@ -1,6 +1,6 @@
-package com.passerby.userservice.dto;
+package com.passerby.authservice.dto;
 
-import com.passerby.userservice.model.Label;
+import com.passerby.authservice.model.Label;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +19,4 @@ public class UserDTO {
     private String avatar;
     private Map<String, String> avatars;
     private Map<String, Label> labels;
-
 }

@@ -14,14 +14,14 @@ Passerby Diary is a simple and sophisticated diary application that allows users
 1. Start the Docker Daemon: On macOS, you can start Docker by opening the Docker Desktop application.
 2. Run 'docker compose up -d' at  'user-service' service. -> run mysql service, create database.
 3. Login 'https://cloud.mongodb.com/', if don't have a database for the project, then create one, use the link to let the local compass connect the cloud. Then update the link into 'application.properties.
-4. Run 'service-registry' service.
-5. Run 'api-gateway' service.
-6. Run 'user-service' service.  -> create mysql tables
-7. At 'user-service' service, run 'resources/data/ *.sql
+4. Zipkin: run: 'docker run -d -p 9411:9411 openzipkin/zipkin'
+5. Run 'service-registry' service.
+6. Run 'api-gateway' service.
+7. Run 'user-service' service.  -> create mysql tables
+8. At 'user-service' service, run 'resources/data/ *.sql
 
 
-Zipkin:
-run: 'docker run -d -p 9411:9411 openzipkin/zipkin'
+
 
 
 http://localhost:8761/

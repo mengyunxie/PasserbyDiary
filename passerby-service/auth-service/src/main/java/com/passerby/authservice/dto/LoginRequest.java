@@ -5,22 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
-
+public class LoginRequest {
     private String username;
-
-    private String avatar;
-
-    private List<String> avatars;
-
-    private List<String> labels;
-
-    public User(String username) {
-    }
+    private String password;
 }

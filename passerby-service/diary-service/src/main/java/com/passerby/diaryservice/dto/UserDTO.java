@@ -14,9 +14,10 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
+    private Long id;
     private String username;
+    private String password;
     private String avatar;
-
     private Map<String, String> avatars;
     private Map<String, Label> labels;
 

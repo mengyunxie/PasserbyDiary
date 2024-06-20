@@ -23,27 +23,38 @@ public class UserService {
     @Autowired
     LabelService labelService;
 
-    public UserDTO loginUser (@RequestBody String  username) {
-        UserDTO userDTO = getUser(username);
-        if(userDTO == null) { // New user, create default labels and avatars for this user
-            userDTO = UserDTO.builder()
-                    .username(username)
-                    .avatar("Default")
-                    .avatars(avatarService.getAllAvatars())
-                    .labels(labelService.getAllLabels())
-                    .build();
-            createUser(userDTO);
+    public UserDTO getUserOrCreate (String  username, String password) {
+        User user = userRepository.findByUsernameAndPassword(username,password);
+        if(user == null) { // New user, create default labels and avatars for this user
+            user = createUser(username, password, "Default");
         }
+
+        UserDTO userDTO = UserDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .avatar(user.getAvatar())
+                .avatars(avatarService.getAllAvatars())
+                .labels(labelService.getAllLabels())
+                .build();
+
         return userDTO;
     }
 
-    public void createUser(UserDTO userDTO) {
+    public UserDTO getUser (String  username) {
+        User user = userRepository.findByUsername(username);
+        return mapToUserDTO(user);
+    }
+
+    public User createUser(String username, String password, String avatar) {
         User user = User.builder()
-                        .username(userDTO.getUsername())
-                        .avatar(userDTO.getAvatar())
+                        .password(password)
+                        .username(username)
+                        .avatar(avatar)
                         .build();
 
         userRepository.save(user);
+        return user;
     }
 
     public UserDTO updateUserAvatar(String username, String avatar) {
@@ -60,18 +71,15 @@ public class UserService {
     }
 
     private UserDTO mapToUserDTO(User user) {
+        if(user == null) return null;
         return UserDTO.builder()
+                .id(user.getId())
                 .username(user.getUsername())
+                .password(user.getPassword())
                 .avatar(user.getAvatar())
                 .avatars(avatarService.getAllAvatars())
                 .labels(labelService.getAllLabels())
                 .build();
-    }
-
-    public UserDTO getUser(String username) {
-        User user = userRepository.findByUsername(username);
-        if(user == null) return null;
-        return mapToUserDTO(user);
     }
 
     public boolean isValidUsername(String username) {
