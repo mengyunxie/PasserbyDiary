@@ -34,9 +34,7 @@ passerby-service/
 └── user-service        # Manages user profiles and data
 ```
 
-## Getting Started
-
-### Prerequisites
+## Prerequisites
 
 Make sure you have the following installed:
 
