@@ -57,11 +57,11 @@ Passerby Diary is designed to be intuitive and user-friendly, with a simple and 
 ## Usage
 
 To use Passerby Diary, follow these simple steps:
-	1.	Create a new account or log in to an existing one.
-	2.	In the “Passerby” section, view the list of passerby diaries and click on each diary to view the details.
-	3.	In the “Mydiary” section, click “New Diary” in the upper right corner to start creating your diary. If you check “Post to Passerby,” this will share your thoughts with other users in the “Passerby” section.
-	4.	In the “Mydiary” section, view the list of all your diaries. Click on each diary to view its details, and edit or delete it.
-	5.	In the “Setting” section, view your profile and update your avatar.
+- Create a new account or log in to an existing one.
+- In the “Passerby” section, view the list of passerby diaries and click on each diary to view the details.
+- In the “Mydiary” section, click “New Diary” in the upper right corner to start creating your diary. If you check “Post to Passerby,” this will share your thoughts with other users in the “Passerby” section.
+- In the “Mydiary” section, view the list of all your diaries. Click on each diary to view its details, and edit or delete it.
+- In the “Setting” section, view your profile and update your avatar.
 
 
 ## Contributing
