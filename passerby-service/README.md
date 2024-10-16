@@ -14,12 +14,14 @@ The Thoughtstream Project is a sophisticated diary application designed to provi
 
 The backend is organized into several microservices, each with its own responsibilities:
 
+```
 passerby-service/
 ├── api-gateway         # Gateway for routing requests to appropriate services
 ├── auth-service        # Manages user authentication and authorization
 ├── diary-service       # Handles diary creation, retrieval, and management
 ├── service-registry    # Eureka service registry for service discovery
 └── user-service        # Manages user profiles and data
+```
 
 ## Technologies Used
 
